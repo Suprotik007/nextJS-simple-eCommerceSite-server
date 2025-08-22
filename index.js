@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 
 dotenv.config();
 
@@ -27,14 +27,20 @@ async function run() {
 run();
 
 // Routes
-// app.get("/api/products", async (req, res) => {
-//   try {
-//     const products = await productsCollection.find().toArray();
-//     res.json(products);
-//   } catch (err) {
-//     res.status(500).json({ error: "Failed to fetch products" });
-//   }
-// });
+app.get("/products", async (req, res) => {
+  try {
+    const products = await productsCollection.find().toArray();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
+});
+
+app.get("/products/:id", async (req, res) => {
+  const { id } = req.params;
+  const product = await productsCollection.findOne({ _id: new ObjectId(id) });
+  res.json(product);
+});
 
 // app.post("/api/products", async (req, res) => {
 //   try {
